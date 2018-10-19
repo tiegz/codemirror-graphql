@@ -77,6 +77,12 @@ const ParseRules = {
       case 'Number':
         return 'NumberValue';
       case 'String':
+        try {
+          var t = token.value.substring(1, token.value.length - 1);
+          if (window.btoa(window.atob(t)) === t) {
+            return 'Base64EncodedStringValue';
+          }
+        } catch (e) { }
         return 'StringValue';
       case 'Punctuation':
         switch (token.value) {
@@ -99,6 +105,7 @@ const ParseRules = {
   },
   NumberValue: [t('Number', 'number')],
   StringValue: [t('String', 'string')],
+  Base64EncodedStringValue: [t('String', 'string base64encodedstring')],
   BooleanValue: [t('Keyword', 'builtin')],
   NullValue: [t('Keyword', 'keyword')],
   ListValue: [p('['), list('Value', p(',')), p(']')],
